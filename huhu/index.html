@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>happy birthdayy</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --maroon-900:#2a0506;
+  --maroon-700:#5a0f17;
+  --maroon-500:#8b1e2f;
+  --gold:#d4af37;
+  --ivory:#fff8f0;
+  --glass: rgba(255,255,255,0.03);
+  --trans: 900ms;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--maroon-900),#40060a 60%);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;color:var(--ivory);-webkit-font-smoothing:antialiased}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+.card{width:100%;max-width:1180px;min-height:720px;border-radius:16px;padding:28px;position:relative;overflow:hidden;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));box-shadow:0 30px 90px rgba(0,0,0,0.65);}
+
+/* subtle shimmer */
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 30% 20%, rgba(255,255,255,0.02), transparent 10%), radial-gradient(circle at 70% 80%, rgba(212,175,55,0.03), transparent 12%);z-index:0}
+
+/* header */
+.header{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.brand{font-family:'Merriweather',serif;font-weight:700;font-size:18px}
+.hint{font-size:13px;color:rgba(255,255,255,0.6)}
+
+/* pages container */
+.pages{position:relative;min-height:600px;z-index:2}
+section.page{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:28px;text-align:center;opacity:0;pointer-events:none;transform:translateY(12px);transition:opacity var(--trans) cubic-bezier(.2,.9,.3,1), transform var(--trans) ease}
+section.page.active{opacity:1;pointer-events:auto;transform:translateY(0)}
+
+/* photo circle */
+.photo-circle{width:140px;height:140px;border-radius:50%;overflow:hidden;border:5px solid rgba(212,175,55,0.12);box-shadow:0 12px 34px rgba(0,0,0,0.55);background:linear-gradient(145deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06))}
+.photo-circle img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* PIN */
+.pin-panel{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:760px}
+.pin-input{width:200px;padding:12px 16px;border-radius:10px;border:none;background:rgba(255,255,255,0.02);color:var(--ivory);font-size:18px;text-align:center;outline:none}
+.pin-btn{padding:11px 18px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--maroon-700),var(--maroon-500));color:var(--ivory);font-weight:700;cursor:pointer}
+.hint-btn{padding:8px 12px;border-radius:9px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.78);cursor:pointer}
+
+/* titles & text */
+.title{font-family:'Merriweather',serif;font-weight:700;font-size:32px;margin:6px 0}
+.lead{max-width:900px;color:rgba(255,255,255,0.95);font-size:16px;line-height:1.7;margin:0}
+
+/* poem */
+.poem{max-width:840px;margin-top:6px;font-family:'Merriweather',serif;font-size:19px;line-height:1.9;color:var(--ivory)}
+.poem .line{opacity:0;transform:translateY(8px);transition:all 700ms cubic-bezier(.2,.9,.3,1)}
+.poem .line.show{opacity:1;transform:translateY(0)}
+
+/* controls */
+.controls{display:flex;gap:12px;margin-top:12px;align-items:center;justify-content:center}
+.btn{padding:10px 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer;background:transparent;color:var(--ivory);border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 24px rgba(0,0,0,0.45)}
+.btn.primary{background:linear-gradient(90deg,var(--maroon-700),var(--maroon-500));color:var(--ivory)}
+
+/* polaroid gallery */
+.polaroid-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:980px;margin-top:18px;justify-items:center}
+.polaroid{
+  width:220px;background:var(--ivory);color:#111;border-radius:8px;padding:12px 12px 18px;box-shadow:0 12px 40px rgba(0,0,0,0.45);transform:translateY(10px);opacity:0;transition:all 900ms cubic-bezier(.2,.9,.3,1);
+  cursor:pointer;user-select:none;
+}
+.polaroid.show{opacity:1;transform:translateY(0)}
+.polaroid .photo{width:196px;height:150px;overflow:hidden;border-radius:6px;background:#ddd}
+.polaroid .photo img{width:100%;height:100%;object-fit:cover;display:block}
+.polaroid .label{margin-top:8px;font-size:13px;color:rgba(0,0,0,0.7);text-align:center}
+
+/* subtle gold glow behind gallery */
+.gallery-glow{position:absolute;left:50%;transform:translateX(-50%);bottom:100px;width:820px;height:220px;border-radius:160px;filter:blur(60px);background:radial-gradient(circle, rgba(212,175,55,0.08), rgba(212,175,55,0.02));pointer-events:none;z-index:1;opacity:0.95}
+
+/* confetti */
+.confetti{position:absolute;inset:0;pointer-events:none;z-index:6}
+
+/* audio control */
+.audio-control{position:fixed;right:18px;top:18px;z-index:9;background:rgba(0,0,0,0.45);padding:10px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);display:flex;gap:8px;align-items:center}
+.audio-control button{background:transparent;border:none;color:var(--ivory);font-weight:700;cursor:pointer}
+
+/* responsive */
+@media (max-width:960px){
+  .polaroid{width:44vw}
+  .polaroid .photo{height:34vw}
+  .polaroid-wrap{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:560px){
+  .polaroid-wrap{grid-template-columns:repeat(1,1fr)}
+  .photo-circle{width:110px;height:110px}
+  .title{font-size:22px}
+  .poem{font-size:16px}
+}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-label="Surprise for Mama">
+      <div class="vignette" aria-hidden="true"></div>
+
+      <div class="header" aria-hidden="true">
+        <div class="brand">For You, Ma</div>
+        <div class="hint">Pin= today </div>
+      </div>
+
+      <div class="pages" id="pages">
+
+        <!-- PIN PAGE -->
+        <section id="pinPage" class="page active" aria-hidden="false">
+          <div class="pin-panel" role="form" aria-label="PIN Gate">
+            <div class="photo-circle" title="Foto Mama (placeholder)">
+              <img id="thumbMain" src="img/mamaround.jpg" alt="Foto Mama" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22100%25%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%235a0f17%22/></svg>'">
+            </div>
+
+            <div class="title">Masukkan PIN untuk membuka kejutan</div>
+            <input id="pinInput" class="pin-input" type="password" placeholder="Masukkan PIN" inputmode="numeric" aria-label="PIN">
+            <div style="display:flex;gap:10px;align-items:center;margin-top:8px">
+              <button class="pin-btn" onclick="submitPin()">open</button>
+              <button class="hint-btn" onclick="hintPin()">hint</button>
+            </div>
+            <div id="pinMsg" style="min-height:18px;margin-top:10px;color:rgba(255,255,255,0.7);font-size:14px"></div>
+
+            <p class="lead" style="margin-top:10px">made with love, happy birthday mama!!!!  </p>
+          </div>
+        </section>
+
+        <!-- MAIN PAGE -->
+        <section id="mainPage" class="page" aria-hidden="true">
+          <div>
+            <div class="title">permulaan.</div>
+            <p class="lead">dont give up, we always here for you.</p>
+
+            <div class="poem" id="poem">
+              <div class="line" data-text="Ma, jika harapan itu mati, biarkan aku menjadi nafasnya."></div>
+              <div class="line" data-text="aku taakan pernah bisa memperbaiki semuanya untukmu, tapii..."></div>
+              <div class="line" data-text="aku bisa berdiri disampingmu , menyala disaat kau padam"></div>
+              <div class="line" data-text="jangan biarkan hari ini menjadi kemenangan atas dirimu."></div>
+              <div class="line" data-text="setidaknya.. bertahanlah hingga suatu saat nanti kau akan menyadari bahwa hidup adalah lebih baik dari sekedar luka."></div>
+            </div>
+
+            <div class="controls" style="margin-top:18px">
+              <button class="btn" onclick="setActive('mainPage')">Refresh</button>
+              <button class="btn primary" onclick="revealGallery()">next<div>
+          </section>
+
+        
+          <section id="galleryPage" class="page" aria-hidden="true">
+          <div style="width:100%;max-width:980px;position:relative">
+            <div class="title">Memori dalam Polaroid</div>
+            <p class="lead">semua kenangan disini adalah sebagian kecil dari cinta yang mama beri, selamat ulang tahun</p>
+
+            <div class="gallery-glow" aria-hidden="true"></div>
+
+            <div class="polaroid-wrap" id="polaroidWrap" style="margin-top:18px">
+              <!-- 6 polaroids -->
+              <div class="polaroid" data-index="0" onclick="chooseImage (0)">
+                <div class="photo"><img id="p0" src="img/mama.jpg" alt="photo 1" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22196%22 height=%22150%22><rect width=%22100%25%22 height=%22100%25%22 fill=%22%23ddd%22/></svg>'"></div>
+                <div class="label">perempuan hebat di hidupku</div>
+                <input type="file" accept="image/*" class="hidden-file" id="f0" style="display:none" onchange="loadLocalImage(event,0)">
+              </div>
+
+              <div class="polaroid" data-index="1" onclick="chooseImage(1)">
+                <div class="photo"><img id="p1" src="img/famm.jpg" alt="imgg" onerror="this.src='mama1.jpg'"></div>
+                <div class="label">rumah dari tawa dan cinta</div>
+                <input type="file" accept="image/*" class="hidden-file" id="f1" style="display:none" onchange="loadLocalImage(event,1)">
+              </div>
+
+              <div class="polaroid" data-index="2" onclick="chooseImage(2)">
+                <div class="photo"><img id="p2" src="img/mama4.jpg" alt="photo 3" onerror="this.src='mama1.jpg'"></div>
+                <div class="label">lelah yang hangat</div>
+                <input type="file" accept="image/*" class="hidden-file" id="f2" style="display:none" onchange="loadLocalImage(event,2)">
+              </div>
+
+              <div class="polaroid" data-index="3" onclick="chooseImage(3)">
+                <div class="photo"><img id="p3" src="img/mamaluna.jpg" alt="photo 4" onerror="this.src='mama1.jpg'"></div>
+                <div class="label">aku selalu nyaman disisimu</div>
+                <input type="file" accept="image/*" class="hidden-file" id="f3" style="display:none" onchange="loadLocalImage(event,3)">
+              </div>
+
+              <div class="polaroid" data-index="4" onclick="chooseImage(4)">
+                <div class="photo"><img id="p4" src="img/mamazka.jpg" alt="photo 5" onerror="this.src='mama1.jpg'"></div>
+                <div class="label">senyumnya, duniamu</div>
+                <input type="file" accept="image/*" class="hidden-file" id="f4" style="display:none" onchange="loadLocalImage(event,4)">
+              </div>
+
+              <div class="polaroid" data-index="5" onclick="chooseImage(5)">
+                <div class="photo"><img id="p5" src="img/mamajuan.jpg" alt="photo 6" onerror="this.src='mama1.jpg'"></div>
+                <div class="label">tawa kecil, alasan mama terus kuat</div>
+                <input type="file" accept="image/*" class="hidden-file" id="f5" style="display:none" onchange="loadLocalImage(event,5)">
+              </div>
+            </div>
+
+            <div class="controls" style="margin-top:18px">
+              <button class="btn" onclick="goTo('mainPage')">Kembali</button>
+              <button class="btn primary" onclick="goTo('finalPage');triggerGalleryShowComplete()">Lanjutkan — Pesan Terakhir</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- FINAL PAGE -->
+        <section id="finalPage" class="page" aria-hidden="true">
+          <div>
+            <div class="title">dear mama</div>
+            <p class="lead">selamat ulang tahun, ma 🤍
+terima kasih udah jadi orang sekuat itu buat aku dan azka juan. ma selalu berjuang, selalu nyoba kasih yang terbaik, bahkan pas dunia rasanya berat banget.
+kadang ma lupa buat jagain diri sendiri, padahal ma juga pantas dapet perhatian, istirahat, dan bahagia yang ma perjuangin buat orang lain.
+
+aku cuma mau bilang  aku liat semuanya, ma. setiap capek yang ma sembunyiin, setiap usaha kecil yang ma lakuin tanpa ngeluh.
+aku bangga banget punya mama kayak ma.
+semoga tahun ini ma bisa ngerasa lebih tenang, lebih dicintai, dan lebih dihargai, bukan cuma sama kami, tapi juga sama diri mama sendiri.
+
+aku sayang banget sama mama. selalu. 🕊</p>
+            <div style="margin-top:12px;color:var(--gold);font-weight:700;font-size:18px">Selamat ulang tahun, Mama. I love you.</div>
+
+            <div class="controls" style="margin-top:18px">
+              <button class="btn" onclick="goTo('galleryPage')">Kembali ke Foto</button>
+              <button class="btn primary" onclick="celebrate()">final</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="confetti" id="confettiArea" aria-hidden="true"></div>
+
+      <div class="audio-control" id="audioControl" style="display:none">
+        <button id="audioToggle">Play</button><span style="font-size:13px;color:rgba(255,255,255,0.95)">Music</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- audio -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="music/nadin.mp3" type="audio/mpeg">
+    Your browser does not support audio.
+  </audio>
+
+<script>
+/* Final Show Edition JS
+ - PIN gate (2710)
+ - poem typewriter
+ - polaroid gallery fade-in one-by-one
+ - click-to-upload per polaroid (FileReader)
+ - audio autoplay fallback
+ - confetti celebrate
+*/
+
+// Pages
+const PAGES = {
+  pin: document.getElementById('pinPage'),
+  main: document.getElementById('mainPage'),
+  gallery: document.getElementById('galleryPage'),
+  final: document.getElementById('finalPage')
+};
+let current = 'pin';
+const CORRECT_PIN = '2710';
+
+function setActivePage(key){
+  Object.values(PAGES).forEach(p => p.classList.remove('active'));
+  if(PAGES[key]) PAGES[key].classList.add('active');
+  current = key;
+  if(key === 'main') animatePoem();
+  if(key === 'gallery') showPolaroids();
+}
+setActivePage('pin');
+
+function submitPin(){
+  const val = document.getElementById('pinInput').value.trim();
+  const msg = document.getElementById('pinMsg');
+  if(val === CORRECT_PIN){
+    msg.textContent = 'PIN benar — membuka kejutan...';
+    msg.style.color = 'rgba(212,175,55,0.95)';
+    setTimeout(()=>{ setActivePage('main'); tryPlayAudio(); }, 700);
+  } else {
+    msg.textContent = 'PIN salah — coba lagi ya 🌹';
+    msg.style.color = '#ffc0cb';
+    shake(document.getElementById('pinInput'));
+  }
+}
+function hintPin(){ document.getElementById('pinMsg').textContent = 'Hint: tanggal spesial (4 digit)'; }
+
+document.getElementById('pinInput').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') submitPin(); });
+
+// small shake
+function shake(el){ el.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}], {duration:420}); }
+
+// poem typing
+const poemEls = Array.from(document.querySelectorAll('#poem .line'));
+function animatePoem(){
+  poemEls.forEach((el, idx)=>{
+    el.classList.remove('show');
+    el.textContent = '';
+    const txt = el.getAttribute('data-text');
+    setTimeout(()=> typeText(el, txt, 0), idx * 900);
+  });
+}
+function typeText(el, text, i){
+  if(i <= text.length){
+    el.textContent = text.slice(0, i);
+    i++;
+    setTimeout(()=> typeText(el, text, i), 12 + Math.random()*10);
+  } else {
+    el.classList.add('show');
+  }
+}
+
+// Polaroid gallery
+const polaroids = Array.from(document.querySelectorAll('.polaroid'));
+function revealGallery(){ setActivePage('gallery'); }
+function showPolaroids(){
+  polaroids.forEach((p, idx) => {
+    p.classList.remove('show');
+    setTimeout(()=> p.classList.add('show'), 300 + idx * 400); // fade-in one by one
+  });
+}
+// allow upload per polaroid
+function chooseImage(i){
+  document.getElementById('f'+i).click();
+}
+function loadLocalImage(e, idx){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    document.getElementById('p'+idx).src = ev.target.result;
+    // update main thumb too (first one)
+    if(idx === 0){ document.getElementById('thumbMain').src = ev.target.result; }
+  };
+  reader.readAsDataURL(file);
+}
+// trigger gallery show complete (for UX when moving forward)
+function triggerGalleryShowComplete(){
+  // ensure all polaroids visible
+  showPolaroids();
+  setTimeout(()=> setActivePage('final'), 1000 + polaroids.length * 350);
+}
+
+// confetti
+function launchConfetti(){
+  const area = document.getElementById('confettiArea');
+  for(let i=0;i<20;i++){
+    const el = document.createElement('div');
+    el.style.position = 'absolute';
+    el.style.left = (5 + Math.random()*90) + '%';
+    el.style.top = (-10 + Math.random()*20) + '%';
+    el.style.width = (6 + Math.random()*10) + 'px';
+    el.style.height = (10 + Math.random()*14) + 'px';
+    el.style.background = (Math.random()>0.6)?'rgba(212,175,55,0.95)':'rgba(255,255,255,0.95)';
+    el.style.transform = 'rotate('+(Math.random()*360)+'deg)';
+    el.style.borderRadius = '2px';
+    el.style.zIndex = 60;
+    area.appendChild(el);
+    const dur = 1200 + Math.random()*1600;
+    el.animate([{ transform:'translateY(0) rotate(0)', opacity:1 }, { transform:`translateY(62vh) rotate(${120 + Math.random()*500}deg)`, opacity:0.9 }], { duration: dur, easing: 'cubic-bezier(.2,.9,.3,1)' });
+    setTimeout(()=> el.remove(), dur + 80);
+  }
+}
+
+function celebrate(){
+  launchConfetti();
+  // overlay
+  const overlay = document.createElement('div');
+  overlay.style.position='fixed';overlay.style.inset='0';overlay.style.display='flex';overlay.style.alignItems='center';overlay.style.justifyContent='center';
+  overlay.style.background='radial-gradient(rgba(42,5,6,0.6), rgba(10,5,5,0.18))';overlay.style.zIndex=9999;overlay.style.pointerEvents='none';
+  overlay.innerHTML = `<div style="text-align:center;color:${getComputedStyle(document.documentElement).getPropertyValue('--ivory')};font-size:20px;padding:22px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));border:1px solid rgba(255,255,255,0.03)"><strong>Selamat ulang tahun, Mama.</strong><div style="margin-top:8px">I love you forever ❤️</div></div>`;
+  document.body.appendChild(overlay);
+  setTimeout(()=> overlay.remove(), 3600);
+}
+
+// audio autoplay fallback
+const audio = document.getElementById('bgAudio');
+const audioControl = document.getElementById('audioControl');
+const audioToggle = document.getElementById('audioToggle');
+
+function tryPlayAudio(){
+  const p = audio.play();
+  if(p !== undefined){
+    p.then(()=> { audioControl.style.display='none'; })
+    .catch(()=> { audioControl.style.display='flex'; audioToggle.textContent='Play'; });
+  }
+}
+audioToggle && audioToggle.addEventListener('click', ()=>{
+  if(audio.paused){ audio.play(); audioToggle.textContent='Pause'; } else { audio.pause(); audioToggle.textContent='Play'; }
+});
+
+// keyboard nav
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'ArrowRight'){
+    if(current === 'main') setActivePage('gallery');
+    else if(current === 'gallery') setActivePage('final');
+  }
+  if(e.key === 'ArrowLeft'){
+    if(current === 'final') setActivePage('gallery');
+    else if(current === 'gallery') setActivePage('main');
+  }
+});
+
+// expose some functions
+window.submitPin = submitPin;
+window.hintPin = hintPin;
+window.revealGallery = revealGallery;
+window.goTo = (id)=>{
+  if(id==='mainPage') setActivePage('main');
+  if(id==='galleryPage') setActivePage('gallery');
+  if(id==='finalPage') setActivePage('final');
+};
+window.celebrate = celebrate;
+window.triggerGalleryShowComplete = triggerGalleryShowComplete;
+
+</script>
+</body>
+</html>
